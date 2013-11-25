@@ -39,4 +39,5 @@ fn doDraw =(
 	drawF t
 )
 
-doDraw()
+ms = MyStack()
+ms.isEmpty()
