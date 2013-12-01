@@ -1,6 +1,5 @@
 struct Turtle(
 	position, 
-	heading,
 	rot,
 	rotset=false
 )
@@ -33,107 +32,108 @@ struct MyStack(
 	)
 )
 fn drawF t =(
-	c=cone radius1:5 radius2:5 height:40 heightsegs:1 sides:8 position:t.position
-	t.position=t.position+t.heading*40
+	c=cone radius1:5 radius2:1 height:40 heightsegs:1 sides:8 position:t.position
 	if t.rotset do(
-		a = eulerAngles t.rot.x t.rot.y t.rot.z
-		rotate c a
+		rotate c t.rot
 	)
+    tr=c.transform
+	p=[0,0,40]*tr
+	t.position= p
+
+
 )
 
 fn drawPlus t a = (
+	q=quat a [0,0,1]
+
 	if not t.rotset then(
-		t.rot=[0,0,a]
+		t.rot=q
 		t.rotset=true
 	)
     else(
-		t.rot+=[0,0,a]
+		t.rot=t.rot * q
 	)	
-	plus = eulerAngles 0  0 a
-	t.heading = t.heading * (plus as matrix3)
 )
 fn drawMinus t a = (
+	q=quat -a [0,0,1]
+
 	if not t.rotset then(
-		t.rot=[0,0,-a]
+		t.rot=q
 		t.rotset=true
 	)
     else(
-		t.rot+=[0,0,-a]
+		t.rot=t.rot * q
 	)	
-	plus = eulerAngles 0  0 -a
-	t.heading = t.heading * (plus as matrix3)
+
 )
 fn drawAmpersand t a = (
+	q=quat -a [1,0,0]
 	if not t.rotset then(
-		t.rot=[-a,0,0]
+		t.rot=q
 		t.rotset=true
+
 	)
-	else(
-		t.rot+=[-a,0,0]
-	)
-	plus = eulerAngles -a 0 0
-	t.heading = t.heading * (plus as matrix3)
+    else(
+		t.rot=t.rot * q
+	)	
+
 )
 fn drawHat t a = (
+	q=quat a [1,0,0]
+
 	if not t.rotset then(
-		t.rot=[a,0,0]
+		t.rot=q
 		t.rotset=true
 	)
     else(
-		t.rot+=[a,0,0]
+		t.rot=t.rot * q
 	)	
-	plus = eulerAngles a 0 0
-	t.heading = t.heading * (plus as matrix3)
+
 )
 
 fn drawSlash t a = (
+	q=quat a [0,1,0]
 	if not t.rotset then(
-		t.rot=[0,a,0]
+		t.rot=q
 		t.rotset=true
 	)
 	else(
-		t.rot+=[0,a,0]
+		t.rot= t.rot * q
 	)
-	
-	plus = eulerAngles 0 a 0
-	t.heading = t.heading * (plus as matrix3)
 )
 fn drawBackSlash t a = (
+	q=quat -a [0,1,0]
 	if not t.rotset then(
-		t.rot=[0,-a,0]
+		t.rot=q
 		t.rotset=true
 	)
     else(
-		t.rot+=[0,-a,0]
+		t.rot=t.rot * q
 	)
-	plus = eulerAngles 0 -a 0
-	t.heading = t.heading * (plus as matrix3)
 )
 
 
+
 fn LSystem = (
-	t=Turtle position:[0,0,0] heading:[0,0,1]
-    drawSlash t 90
-	drawF t
-	drawBackSlash t 90
-	drawF t
-	drawBackSlash t 90
-	drawF t
-	drawSlash t 90
-	drawAmpersand t 90
-	drawF t
-	drawHat t 90
-	drawSlash t 90
-	drawF t
-	t
-	drawAmpersand t 90
-	drawAmpersand t 90
-	t
-	drawF t
-	drawBackSlash t 90
-	t
-	drawF t
-	drawBackSlash t 90
+        t=Turtle position:[0,0,0]
+    	drawSlash t 90
+        drawF t
+        drawBackSlash t 90
+        drawF t
+        drawBackSlash t 90
+        drawF t
+        drawSlash t 90
+        drawAmpersand t 90
+        drawF t
+        drawHat t 90
+        drawSlash t 90
+        drawF t
+        drawAmpersand t 90
+        drawAmpersand t 90
+        drawF t
+        drawBackSlash t 90
+        drawF t
+        drawBackSlash t 90
 )
 
 LSystem()
